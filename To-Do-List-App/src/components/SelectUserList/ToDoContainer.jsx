@@ -4,7 +4,7 @@ import { getUserToDos, addNewToDoTask, deleteToDoTask, updateToDoTask } from '..
 import ToDoList from '../ToDoList/ToDoList';
 import AddNewTask from '../AddNewTask/AddNewTask';
 
-function SelectUserList() {
+function ToDoContainer() {
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState('');
     const [toDosList, setToDosList] = useState([]);
@@ -68,11 +68,6 @@ function SelectUserList() {
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Select User from list:</h2>
-            {selectedUserId && (
-                <div className="mt-4 font-medium">
-                    <p>{`Selected user ID number: ${selectedUserId}`}</p>
-                </div>
-            )}
             <select
                 value={selectedUserId}
                 onChange={changeUser}
@@ -101,4 +96,4 @@ function SelectUserList() {
     );
 }
 
-export default SelectUserList;
+export default ToDoContainer;
