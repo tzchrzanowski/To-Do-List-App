@@ -27,10 +27,9 @@ function ToDoList({toDosList, onDelete, onUpdate}) {
         <div className="mt-6 bg-gray-200">
             <ul className="space-y-2 border-gray-200">
                 {toDosList.map(item => {
-                    return (<>
+                    return (<div key={item.id}>
                         {editItemId == item.id ? (<>
                             <li
-                                key={item.id}
                                 className="w-full flex flex-col items-center p-3 border-gray-100 rounded"
                             >
                                 <input 
@@ -46,7 +45,6 @@ function ToDoList({toDosList, onDelete, onUpdate}) {
                             </li>
                         </>) : (<>
                             <li
-                                key={item.id}
                                 className="w-full flex flex-row justify-between items-center p-3 border-gray-100 rounded"
                             >
                                 <div>{item.todo}</div>
@@ -66,7 +64,7 @@ function ToDoList({toDosList, onDelete, onUpdate}) {
                                 </div>
                             </li>
                         </>)}
-                    </>)
+                    </div>)
                 })}
             </ul>
         </div>

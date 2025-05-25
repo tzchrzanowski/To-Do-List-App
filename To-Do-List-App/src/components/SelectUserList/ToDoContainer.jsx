@@ -3,6 +3,7 @@ import { getUsers } from '../../data/usersApi';
 import { getUserToDos, addNewToDoTask, deleteToDoTask, updateToDoTask } from '../../data/tasksApi';
 import ToDoList from '../ToDoList/ToDoList';
 import AddNewTask from '../AddNewTask/AddNewTask';
+import { getCachedTodoList, setCachedTodos } from '../../data/cache';
 
 function ToDoContainer() {
     const [users, setUsers] = useState([]);
@@ -23,14 +24,19 @@ function ToDoContainer() {
     useEffect(()=> {
         if (!selectedUserId) return;
 
-        (async ()=> {
-            try {
-                const toDosList = await getUserToDos(selectedUserId);
-                setToDosList(toDosList);
-            } catch (error) {
-                console.error("Getting users error: ", error);
-            };
-        })();
+        const cached = getCachedTodoList(selectedUserId);
+        if (cached) {
+            setToDosList(cached);
+        } else {
+            (async ()=> {
+                try {
+                    const toDosList = await getUserToDos(selectedUserId);
+                    setToDosList(toDosList);
+                } catch (error) {
+                    console.error("Getting users error: ", error);
+                };
+            })();
+        }
     }, [selectedUserId]);
 
     const changeUser = (e) => {
@@ -41,6 +47,7 @@ function ToDoContainer() {
         try {
             const newTask = await addNewToDoTask(Number(selectedUserId), caption);
             setToDosList(prev => [...prev, newTask]);
+            setCachedTodos(selectedUserId, newTask)
         } catch (error) {
             console.error("Failed to add task: ", error);
         }
@@ -51,6 +58,7 @@ function ToDoContainer() {
         try {
             await deleteToDoTask(taskId);
             setToDosList(prev => prev.filter(task => task.id !== taskId));
+            setCachedTodos(selectedUserId, toDosList)
         } catch (error) {
             console.error("Failed to delete task: ", error);
         }
@@ -60,6 +68,7 @@ function ToDoContainer() {
         try {
             const updatedTask = await updateToDoTask(taskId, newCaption);
             setToDosList(prev => prev.map(item => (item.id === taskId) ? {...item, todo: updatedTask.todo} : item));
+            setCachedTodos(selectedUserId, updatedTask)
         } catch (error) {
             console.error("Failed to update task: ", error);
         }
