@@ -1,7 +1,8 @@
 import { useEffect, useState} from 'react';
 import { getUsers } from '../../data/usersApi';
-import { getUserToDos } from '../../data/tasksApi';
+import { getUserToDos, addNewToDoTask } from '../../data/tasksApi';
 import ToDoList from '../ToDoList/ToDoList';
+import AddNewTask from '../AddNewTask/AddNewTask';
 
 function SelectUserList() {
     const [users, setUsers] = useState([]);
@@ -36,6 +37,16 @@ function SelectUserList() {
         setSelectedUserId(e.target.value);
     };
 
+    const addNewTask = async (caption) => {
+        try {
+            const newTask = await addNewToDoTask(Number(selectedUserId), caption);
+            setToDosList(prev => [...prev, newTask]);
+        } catch (error) {
+            console.error("Failed to add task: ", error);
+        }
+        
+    } 
+
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Select User from list:</h2>
@@ -60,7 +71,10 @@ function SelectUserList() {
                     );
                 })}
             </select>
-            <ToDoList toDosList={toDosList}/>
+            {selectedUserId && (<>
+                <ToDoList toDosList={toDosList}/>
+                <AddNewTask addTask={addNewTask}/>
+            </>)}
         </div>
     );
 }
