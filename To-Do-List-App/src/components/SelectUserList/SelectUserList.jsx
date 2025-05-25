@@ -1,9 +1,11 @@
 import { useEffect, useState} from 'react';
 import { getUsers } from '../../data/usersApi';
+import { getUserToDos } from '../../data/tasksApi';
 
 function SelectUserList() {
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState('');
+    const [toDosList, setToDosList] = useState([]);
 
     useEffect(()=> {
         (async ()=> {
@@ -16,13 +18,31 @@ function SelectUserList() {
         })();
     }, []);
 
+    useEffect(()=> {
+        if (!selectedUserId) return;
+
+        (async ()=> {
+            try {
+                const toDosList = await getUserToDos(selectedUserId);
+                setToDosList(toDosList);
+            } catch (error) {
+                console.error("Getting users error: ", error);
+            };
+        })();
+    }, [selectedUserId]);
+
     const changeUser = (e) => {
         setSelectedUserId(e.target.value);
-    } 
+    };
 
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Select User from list:</h2>
+            {selectedUserId && (
+                <div className="mt-4 font-medium">
+                    <p>{`Selected user ID number: ${selectedUserId}`}</p>
+                </div>
+            )}
             <select
                 value={selectedUserId}
                 onChange={changeUser}
@@ -40,9 +60,22 @@ function SelectUserList() {
                 })}
             </select>
 
-            {selectedUserId && (
-                <div className="mt-4 font-medium">
-                    <p>{`Selected user ID number: ${selectedUserId}`}</p>
+
+
+            {toDosList.length > 0 && (
+                <div className="mt-6 bg-gray-200">
+                    <ul className="space-y-2 border-gray-200">
+                        {toDosList.map(item => {
+                            return (
+                                <li
+                                    key={item.id}
+                                    className="p-3 border-gray-100 rounded"
+                                >
+                                    {item.todo}
+                                </li>
+                            )
+                        })}
+                    </ul>
                 </div>
             )}
         </div>
