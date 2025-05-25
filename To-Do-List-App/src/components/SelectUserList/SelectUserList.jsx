@@ -1,8 +1,20 @@
-import { useState} from 'react';
-import { users } from '../../data/usersList';
+import { useEffect, useState} from 'react';
+import { getUsers } from '../../data/usersApi';
 
 function SelectUserList() {
+    const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState('');
+
+    useEffect(()=> {
+        (async ()=> {
+            try {
+                const data = await getUsers();
+                setUsers(data);
+            } catch (error) {
+                console.error("Getting users error: ", error);
+            };
+        })();
+    }, []);
 
     const changeUser = (e) => {
         setSelectedUserId(e.target.value);
@@ -21,8 +33,8 @@ function SelectUserList() {
                 </option>
                 {users.map((user) => {
                     return (
-                        <option key={user.userId} value={user.userId}>
-                            User id: {user.userId}
+                        <option key={user.id} value={user.id}>
+                            {`User id: ${user.firstName} ${user.lastName}`}
                         </option>
                     );
                 })}
@@ -30,7 +42,7 @@ function SelectUserList() {
 
             {selectedUserId && (
                 <div className="mt-4 font-medium">
-                    <p>{`Selected user: ${selectedUserId}`}</p>
+                    <p>{`Selected user ID number: ${selectedUserId}`}</p>
                 </div>
             )}
         </div>

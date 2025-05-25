@@ -1,5 +1,0 @@
-export const users = [
-    { userId: 1},
-    { userId: 2},
-    { userId: 3}
-];
