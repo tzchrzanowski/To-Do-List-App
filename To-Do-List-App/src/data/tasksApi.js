@@ -26,3 +26,10 @@ export const deleteToDoTask = async(id) => {
     return deletedTask.data;
 }
 
+export const updateToDoTask = async (id, newCaption) => {
+    const updateTaskUrl = taskUrl + id;
+    const updatedTask = await axios.put(updateTaskUrl, {
+        todo: newCaption
+    });
+    return updatedTask.data;
+}

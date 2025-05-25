@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import { getUsers } from '../../data/usersApi';
-import { getUserToDos, addNewToDoTask, deleteToDoTask } from '../../data/tasksApi';
+import { getUserToDos, addNewToDoTask, deleteToDoTask, updateToDoTask } from '../../data/tasksApi';
 import ToDoList from '../ToDoList/ToDoList';
 import AddNewTask from '../AddNewTask/AddNewTask';
 
@@ -56,6 +56,15 @@ function SelectUserList() {
         }
     };
 
+    const updateTask = async (taskId, newCaption) => {
+        try {
+            const updatedTask = await updateToDoTask(taskId, newCaption);
+            setToDosList(prev => prev.map(item => (item.id === taskId) ? {...item, todo: updatedTask.todo} : item));
+        } catch (error) {
+            console.error("Failed to update task: ", error);
+        }
+    };
+
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Select User from list:</h2>
@@ -84,6 +93,7 @@ function SelectUserList() {
                 <ToDoList 
                     toDosList={toDosList}
                     onDelete={deleteTask}
+                    onUpdate={updateTask}
                 />
                 <AddNewTask addTask={addNewTask}/>
             </>)}
