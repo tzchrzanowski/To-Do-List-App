@@ -11,7 +11,7 @@ function AddNewTask({addTask}) {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mt-6">
             <input
                 type="text"
                 placeholder="New task..."

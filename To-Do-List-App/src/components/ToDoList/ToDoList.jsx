@@ -1,4 +1,4 @@
-function ToDoList({toDosList}) {
+function ToDoList({toDosList, onDelete}) {
     if (!toDosList.length) {
         return <p>{"Nothing to show..."}</p>
     }
@@ -10,9 +10,15 @@ function ToDoList({toDosList}) {
                     return (
                         <li
                             key={item.id}
-                            className="p-3 border-gray-100 rounded"
+                            className="w-full flex flex-row justify-between items-center p-3 border-gray-100 rounded"
                         >
-                            {item.todo}
+                            <div>{item.todo}</div>
+                            <button
+                                onClick={()=> onDelete(item.id)}
+                                className="ml-4 bg-red-200 text-white rounded hover:bg-red-500"
+                            >
+                                {"X"}
+                            </button>
                         </li>
                     )
                 })}

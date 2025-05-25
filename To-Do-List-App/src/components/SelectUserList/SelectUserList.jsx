@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import { getUsers } from '../../data/usersApi';
-import { getUserToDos, addNewToDoTask } from '../../data/tasksApi';
+import { getUserToDos, addNewToDoTask, deleteToDoTask } from '../../data/tasksApi';
 import ToDoList from '../ToDoList/ToDoList';
 import AddNewTask from '../AddNewTask/AddNewTask';
 
@@ -47,6 +47,15 @@ function SelectUserList() {
         
     } 
 
+    const deleteTask = async (taskId) => {
+        try {
+            await deleteToDoTask(taskId);
+            setToDosList(prev => prev.filter(task => task.id !== taskId));
+        } catch (error) {
+            console.error("Failed to delete task: ", error);
+        }
+    };
+
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Select User from list:</h2>
@@ -72,7 +81,10 @@ function SelectUserList() {
                 })}
             </select>
             {selectedUserId && (<>
-                <ToDoList toDosList={toDosList}/>
+                <ToDoList 
+                    toDosList={toDosList}
+                    onDelete={deleteTask}
+                />
                 <AddNewTask addTask={addNewTask}/>
             </>)}
         </div>
