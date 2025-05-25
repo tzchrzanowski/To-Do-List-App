@@ -1,6 +1,7 @@
 import { useEffect, useState} from 'react';
 import { getUsers } from '../../data/usersApi';
 import { getUserToDos } from '../../data/tasksApi';
+import ToDoList from '../ToDoList/ToDoList';
 
 function SelectUserList() {
     const [users, setUsers] = useState([]);
@@ -59,25 +60,7 @@ function SelectUserList() {
                     );
                 })}
             </select>
-
-
-
-            {toDosList.length > 0 && (
-                <div className="mt-6 bg-gray-200">
-                    <ul className="space-y-2 border-gray-200">
-                        {toDosList.map(item => {
-                            return (
-                                <li
-                                    key={item.id}
-                                    className="p-3 border-gray-100 rounded"
-                                >
-                                    {item.todo}
-                                </li>
-                            )
-                        })}
-                    </ul>
-                </div>
-            )}
+            <ToDoList toDosList={toDosList}/>
         </div>
     );
 }
